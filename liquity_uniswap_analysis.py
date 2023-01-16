@@ -1,6 +1,6 @@
 import pickle as pkl
 import pandas as pd
-import math
+import pickle as pkl
 
 # load univ3 logs for lusd/usdc
 with open("/Users/jonas/Workspace/logs.pkl", "rb") as f:
@@ -28,22 +28,21 @@ def data_cleaning(raw_df):
     # apply sqrt computation & drop raw sqrt column
     relevant_df["price"] = relevant_df["sqrtPriceX96"].apply(compute_sqrt_ratio)
     relevant_df.drop(columns =['sqrtPriceX96'], inplace=True)
-    relevant_df.rename(columns = {'amount0':'LUSD','amount1':'USDC'}, inplace = True)
+    relevant_df.rename(columns = {'amount0':'LUSD','amount1':'USDC', 'liquidity':'virtual_tokens'}, inplace = True)
     
     # scale units
     relevant_df["LUSD"] = relevant_df["LUSD"] / (10 ** 18)
     relevant_df["USDC"] = relevant_df["USDC"] / (10 ** 6)
-    # currently wrong?!
-    relevant_df["liquidity"] = relevant_df["liquidity"] / (10 ** 18)
+    # to do: convert virtual tokens to TVL, guidance: https://stackoverflow.com/a/71815432
 
     return relevant_df
 
 # output
 cleaned_df = data_cleaning(raw_df)
 
-print(cleaned_df)
+with open('liquity_univ3_swaps.pkl', 'wb') as handle:
+    pkl.dump(cleaned_df, handle, protocol=pkl.HIGHEST_PROTOCOL)
+    
 cleaned_df.to_csv("/Users/jonas/Workspace/Local/Drop/liquity_univ3.csv")
 
-# specific block
-# data_structure = cleaned_df.loc[cleaned_df['block']=='16389986']
-# print(data_structure)
+print(cleaned_df)

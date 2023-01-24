@@ -36,24 +36,6 @@ def get_data(BUCKETS: int, START_BLOCK: int, END_BLOCK: int):
         pass_filter = contract.events.Swap.createFilter(fromBlock=bucket[0], toBlock=bucket[1])
         logs.extend(pass_filter.get_all_entries())
 
-    ### Here's your old code - which I think was repeating many values unnecessarily, 
-    ### which you can see here with the numbers
-    # logs_subset = []
-    # logs_complete = []
-    # for i in range(10):
-    #     logs_subset.extend([i, i + 0.5])
-    #     logs_complete.append(logs_subset)
-    #     print("logs_subset")
-    #     print(logs_subset)
-    #     print("logs_complete")
-    #     print(logs_complete)
-
-    # flat_logs = [item for sublist in logs_complete for item in sublist]
-
-    # print("flat")
-    # print(flat_logs)
-
-    
     with open('liquity_logs_uniswap_test.pkl', 'wb') as handle:
         pkl.dump(logs, handle, protocol=pkl.HIGHEST_PROTOCOL)
         

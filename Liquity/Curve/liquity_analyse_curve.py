@@ -18,7 +18,6 @@ def normalize_names_curve_raw(curve_df_raw):
 
 def normalize_curve(curve_df):
     
-    curve_df = curve_df.drop(columns=['id'])
     curve_df = curve_df.sort_values(by='block', ascending=True)
     
     curve_df['USDC_amount'] = curve_df['amountSold'].where(curve_df['tokenSold'] == 'USDC').mul(-1)
@@ -40,10 +39,7 @@ def normalize_curve(curve_df):
 def main(): 
     curve_df_raw = normalize_names_curve_raw(data)
     curve_df = normalize_curve(curve_df_raw).reset_index().drop(columns=['index'])
-    
-    print(curve_df)
-    # print(curve_df)
-    
+        
     curve_df.to_feather("/Users/jonas/Workspace/Local/Drop/results/curve_logs_liquity.feather")
     print("success")
     
